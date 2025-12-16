@@ -1,0 +1,14 @@
+{
+    "name": "mautic/ai-enrichment-bundle",
+    "description": "AI-powered company data enrichment for Mautic using nested AI calls with web search capabilities",
+    "type": "mautic-plugin",
+    "version": "1.0.0",
+    "require": {
+        "php": ">=7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "MauticPlugin\\MauticAiEnrichmentBundle\\": ""
+        }
+    }
+}

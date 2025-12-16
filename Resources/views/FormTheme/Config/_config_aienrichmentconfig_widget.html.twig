@@ -1,0 +1,50 @@
+{% block aienrichmentconfig_widget %}
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <i class="ri-sparkling-line"></i> AI Enrichment Settings
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div class="alert alert-info mb-md">
+                <strong><i class="ri-information-line"></i> AI Enrichment Configuration</strong><br>
+                Configure AI model and prompts for company data enrichment. The enrichment uses a two-tier AI architecture:
+                <strong>Assistant AI</strong> (searches the web) and <strong>Site Fetcher AI</strong> (analyzes content).
+                <br><br>
+                <a href="{{ path('mautic_ai_log_index') }}" class="btn btn-primary btn-sm" target="_blank">
+                    <i class="ri-file-list-line"></i> View AI Enrichment Log
+                </a>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    {{ form_row(form.ai_enrichment_model) }}
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h4><i class="ri-robot-line"></i> Level 1: Assistant AI</h4>
+                    <p class="text-muted">
+                        This AI decides which URLs to search and coordinates the enrichment process. It has access to the <code>web_search</code> tool.
+                    </p>
+                    {{ form_row(form.ai_enrichment_assistant_prompt) }}
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h4><i class="ri-search-line"></i> Level 2: Site Fetcher AI</h4>
+                    <p class="text-muted">
+                        This AI analyzes web content fetched by the Assistant AI and extracts specific information.
+                    </p>
+                    {{ form_row(form.ai_enrichment_fetcher_prompt) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

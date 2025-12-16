@@ -1,0 +1,98 @@
+<div class="modal-body">
+    <div class="enrichment-modal">
+        {% if company %}
+            <p class="mb-lg">
+                <strong>Company:</strong> {{ company.name }}
+            </p>
+        {% else %}
+            <div class="alert alert-warning">
+                <i class="ri-alert-line"></i>
+                <strong>Note:</strong> Please enter a company name in the form before using enrichment features.
+            </div>
+        {% endif %}
+
+
+    {% set hasEmptyFields = false %}
+    {% for typeKey, type in enrichmentTypes %}
+        {% set fieldValue = company and company.fields[type.field] is defined ? company.fields[type.field].value : null %}
+        {% if not fieldValue or fieldValue is empty %}
+            {% set hasEmptyFields = true %}
+        {% endif %}
+    {% endfor %}
+
+    {% if hasEmptyFields %}
+        <div class="row">
+            {% for typeKey, type in enrichmentTypes %}
+                {% set fieldValue = company and company.fields[type.field] is defined ? company.fields[type.field].value : null %}
+                {% if not fieldValue or fieldValue is empty %}
+                    <div class="col-md-4 mb-md">
+                        <button
+                            class="btn btn-primary enrichment-btn"
+                            data-type="{{ typeKey }}"
+                            data-company-id="{{ companyId }}"
+                            data-field="{{ type.field }}"
+                            {% if not company %}disabled{% endif %}
+                        >
+                            <i class="{{ type.icon }}"></i>
+                            {{ type.label }}
+                        </button>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-success">
+            <i class="ri-check-line"></i>
+            <strong>All fields are already filled!</strong> This company has all available information.
+        </div>
+    {% endif %}
+
+        <hr>
+
+        <div id="enrichment-results" class="hide">
+            <div id="enrichment-loading" class="hide text-center" style="padding: 30px;">
+                <i class="fa fa-spinner fa-spin fa-3x" style="color: #486AE2;"></i>
+                <p style="margin-top: 15px; font-size: 16px;">AI is analyzing... This may take a moment.</p>
+            </div>
+
+            <div id="enrichment-result-container" class="hide">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <i class="ri-check-line"></i> Enrichment Result
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        {{ include('@MauticAiEnrichment/Enrichment/result_table.html.twig') }}
+                    </div>
+                </div>
+            </div>
+
+            <div id="enrichment-error" class="alert alert-danger hide">
+                <strong><i class="ri-error-warning-line"></i> Error:</strong>
+                <span id="enrichment-error-message"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">
+        <i class="ri-close-line"></i> Close
+    </button>
+</div>
+
+<script>
+    // Initialize enrichment modal
+    if (typeof MauticAiEnrichment !== 'undefined') {
+        MauticAiEnrichment.initModal();
+
+        // Add ?enrich=true to URL when modal opens
+        MauticAiEnrichment.updateUrlParam();
+
+        // Remove ?enrich=true when modal closes
+        mQuery('#MauticSharedModal').on('hidden.bs.modal', function() {
+            MauticAiEnrichment.removeUrlParam();
+        });
+    }
+</script>
